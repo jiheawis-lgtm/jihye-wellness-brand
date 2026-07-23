@@ -1,0 +1,422 @@
+<title>jihye · essence — 무드보드</title>
+<style>
+  :root{
+    /* --- warm light (primary world) --- */
+    --ground:#E7DECF;
+    --raised:#F3EDE2;
+    --raised-2:#DFD4C1;
+    --ink:#221E17;         /* the "black accent" — warm near-black */
+    --ink-soft:#4C4539;
+    --muted:#8B8175;       /* warm grey */
+    --line:#CDC2AF;
+    --wood:#6C5843;
+    --espresso:#3A3125;
+    --honey:#E9D5AC;       /* soft natural light — used in gradients only */
+    --honey-deep:#D8BE8B;
+    --grain-blend:soft-light;
+    --grain-opacity:.055;
+    --shadow:0 1px 2px rgba(34,30,23,.05), 0 12px 34px -18px rgba(34,30,23,.28);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      /* --- warm candlelit / antique-ebony dark --- */
+      --ground:#1C1913;
+      --raised:#25211A;
+      --raised-2:#2E2820;
+      --ink:#ECE3D2;        /* cream becomes the reading ink */
+      --ink-soft:#CBC0AD;
+      --muted:#9A8F7C;
+      --line:#39332A;
+      --wood:#987B5B;
+      --espresso:#CDB78E;
+      --honey:#C6A469;
+      --honey-deep:#E4C88C;
+      --grain-blend:overlay;
+      --grain-opacity:.075;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 44px -20px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"]{
+    --ground:#E7DECF;--raised:#F3EDE2;--raised-2:#DFD4C1;--ink:#221E17;--ink-soft:#4C4539;
+    --muted:#8B8175;--line:#CDC2AF;--wood:#6C5843;--espresso:#3A3125;--honey:#E9D5AC;
+    --honey-deep:#D8BE8B;--grain-blend:soft-light;--grain-opacity:.055;
+    --shadow:0 1px 2px rgba(34,30,23,.05), 0 12px 34px -18px rgba(34,30,23,.28);
+  }
+  :root[data-theme="dark"]{
+    --ground:#1C1913;--raised:#25211A;--raised-2:#2E2820;--ink:#ECE3D2;--ink-soft:#CBC0AD;
+    --muted:#9A8F7C;--line:#39332A;--wood:#987B5B;--espresso:#CDB78E;--honey:#C6A469;
+    --honey-deep:#E4C88C;--grain-blend:overlay;--grain-opacity:.075;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 44px -20px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+
+  .page{
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    position:relative;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* film grain over the whole surface */
+  .page::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
+    mix-blend-mode:var(--grain-blend);opacity:var(--grain-opacity);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size:140px 140px;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+  section{position:relative;z-index:1}
+
+  .eyebrow{
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--muted);margin:0;
+  }
+  h2.sect{
+    font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3.4vw,2.1rem);
+    letter-spacing:-.01em;margin:.5rem 0 0;text-wrap:balance;
+  }
+  .sect-note{color:var(--ink-soft);max-width:60ch;margin:.7rem 0 0;font-size:.98rem}
+  .sect-head{margin-bottom:2rem}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:88vh;display:flex;flex-direction:column;justify-content:center;
+    padding:8vh 0 7vh;overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 12% 4%, var(--honey) 0%, transparent 46%),
+      radial-gradient(90% 70% at 92% 100%, var(--honey-deep) 0%, transparent 55%);
+    background-blend-mode:normal;
+  }
+  @media (prefers-color-scheme:dark){
+    .hero{background:
+      radial-gradient(120% 90% at 12% 2%, rgba(198,164,105,.30) 0%, transparent 48%),
+      radial-gradient(90% 70% at 95% 100%, rgba(198,164,105,.16) 0%, transparent 55%);}
+  }
+  :root[data-theme="dark"] .hero{background:
+    radial-gradient(120% 90% at 12% 2%, rgba(198,164,105,.30) 0%, transparent 48%),
+    radial-gradient(90% 70% at 95% 100%, rgba(198,164,105,.16) 0%, transparent 55%);}
+  :root[data-theme="light"] .hero{background:
+    radial-gradient(120% 90% at 12% 4%, var(--honey) 0%, transparent 46%),
+    radial-gradient(90% 70% at 92% 100%, var(--honey-deep) 0%, transparent 55%);}
+
+  .hero .kicker{display:flex;align-items:center;gap:.8rem;color:var(--muted);
+    font-family:var(--mono);font-size:.74rem;letter-spacing:.24em;text-transform:uppercase}
+  .hero .kicker::after{content:"";height:1px;flex:1;background:var(--line);max-width:220px}
+  .tagline{
+    font-family:var(--serif);font-weight:400;line-height:1.02;letter-spacing:-.025em;
+    font-size:clamp(2.9rem,10.5vw,6.2rem);margin:.35em 0 .28em;text-wrap:balance;
+  }
+  .tagline em{font-style:italic;color:var(--wood)}
+  .hero-sub{font-size:clamp(1.05rem,2.4vw,1.35rem);color:var(--ink-soft);max-width:34ch;line-height:1.5}
+  .hero-sub b{color:var(--ink);font-weight:600}
+  .filmstrip{
+    margin-top:2.6rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);display:flex;gap:1.4rem;flex-wrap:wrap;align-items:center;
+  }
+  .filmstrip span{display:flex;align-items:center;gap:.5rem}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--wood);display:inline-block}
+
+  /* ---------- PILLARS ---------- */
+  .pillars{padding:6.5rem 0 5rem}
+  .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .pillar{background:var(--raised);padding:2.1rem 1.6rem 2.3rem;min-height:230px;display:flex;flex-direction:column}
+  .pillar .en{font-family:var(--serif);font-size:1.9rem;letter-spacing:-.01em}
+  .pillar .kr{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.15rem}
+  .pillar p{color:var(--ink-soft);font-size:.94rem;margin:1rem 0 0}
+  .pillar .bar{height:3px;width:38px;background:var(--ink);margin-top:auto;border-radius:2px}
+
+  /* ---------- PALETTE ---------- */
+  .palette{padding:4rem 0}
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+  .sw{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--raised);box-shadow:var(--shadow)}
+  .sw .chip{height:116px}
+  .sw .meta{padding:.7rem .8rem .85rem}
+  .sw .nm{font-size:.86rem;font-weight:600}
+  .sw .kr{font-size:.74rem;color:var(--muted);margin-top:1px}
+  .sw .hex{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--ink-soft);margin-top:.5rem;text-transform:uppercase}
+
+  /* ---------- MATERIALS ---------- */
+  .materials{padding:4rem 0}
+  .tile-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:150px;gap:14px}
+  .tile{border-radius:14px;overflow:hidden;position:relative;border:1px solid var(--line);box-shadow:var(--shadow)}
+  .tile .lab{position:absolute;left:12px;bottom:11px;z-index:3;color:#F5EFE3;
+    font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    text-shadow:0 1px 6px rgba(0,0,0,.55)}
+  .tile .lab small{display:block;letter-spacing:.02em;text-transform:none;opacity:.85;font-size:.82em;margin-top:1px}
+  .tile::before{content:"";position:absolute;inset:0;z-index:2;
+    background:linear-gradient(to top, rgba(20,16,10,.42), transparent 55%)}
+  .span2{grid-column:span 2}.span3{grid-column:span 3}.row2{grid-row:span 2}
+
+  .t-wood{background:
+    repeating-linear-gradient(94deg,#6b5843 0 3px,#5c4a37 3px 5px,#75604a 5px 9px,#604d3a 9px 12px)}
+  .t-linen{background:
+    repeating-linear-gradient(0deg,#e4dac6 0 2px,#d8ccb4 2px 4px),
+    repeating-linear-gradient(90deg,rgba(140,125,100,.5) 0 2px,transparent 2px 4px);background-blend-mode:multiply}
+  .t-jute{background:
+    repeating-linear-gradient(45deg,#b39c78 0 4px,#a68d67 4px 8px),
+    repeating-linear-gradient(-45deg,rgba(90,72,48,.4) 0 4px,transparent 4px 8px);background-blend-mode:multiply}
+  .t-terrazzo{background:
+    radial-gradient(circle at 18% 28%,#221E17 0 3px,transparent 4px),
+    radial-gradient(circle at 62% 18%,#8B8175 0 4px,transparent 5px),
+    radial-gradient(circle at 82% 62%,#6C5843 0 5px,transparent 6px),
+    radial-gradient(circle at 34% 72%,#221E17 0 2px,transparent 3px),
+    radial-gradient(circle at 72% 88%,#a99a80 0 3px,transparent 4px),
+    radial-gradient(circle at 46% 44%,#6C5843 0 2px,transparent 3px),
+    radial-gradient(circle at 8% 82%,#8B8175 0 3px,transparent 4px),
+    #ECE4D6}
+  .t-paper{background:
+    linear-gradient(135deg,#F3EDE2,#E7DECF);position:relative}
+  .t-paper::after{content:"";position:absolute;inset:0;opacity:.5;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23p)' opacity='0.35'/></svg>")}
+  .t-light{background:
+    linear-gradient(120deg,#F6EAC9 0%,#EBDBB4 30%,#E7DECF 62%,#D9CBB0 100%)}
+  .t-black{background:linear-gradient(135deg,#2b261d,#141109)}
+  .t-black .lab{color:#EDE3D2}
+
+  /* ---------- POLES ---------- */
+  .poles{padding:5rem 0}
+  .pole-grid{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:0}
+  .pole{background:var(--raised);border:1px solid var(--line);padding:2rem 1.8rem;border-radius:16px}
+  .pole h3{font-family:var(--serif);font-weight:400;font-size:1.35rem;margin:.2rem 0 0}
+  .pole .h{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .pole p{font-size:.92rem;color:var(--ink-soft);margin:.9rem 0 0}
+  .pole ul{margin:.9rem 0 0;padding-left:1.1rem;font-size:.9rem;color:var(--ink-soft)}
+  .pole li{margin:.25rem 0}
+  .cross{display:flex;align-items:center;justify-content:center;font-family:var(--serif);
+    font-size:2rem;color:var(--wood);padding:0 1.1rem}
+  .verdict{margin-top:1.6rem;padding:1.4rem 1.6rem;border-left:3px solid var(--ink);
+    background:var(--raised-2);border-radius:0 12px 12px 0;font-family:var(--serif);
+    font-size:1.15rem;line-height:1.5;text-wrap:balance}
+  .verdict b{color:var(--wood);font-style:italic;font-weight:400}
+
+  /* ---------- SCENES ---------- */
+  .scenes{padding:4rem 0}
+  .scene-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .scene{aspect-ratio:3/4;border-radius:13px;position:relative;overflow:hidden;border:1px solid var(--line);
+    display:flex;align-items:flex-end;box-shadow:var(--shadow)}
+  .scene .cap{position:relative;z-index:2;padding:.9rem .85rem;color:#F4EEE1;
+    font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+    text-shadow:0 1px 6px rgba(0,0,0,.6)}
+  .scene .cap b{display:block;font-family:var(--sans);font-size:.94rem;letter-spacing:0;text-transform:none;
+    font-weight:600;margin-bottom:2px}
+  .scene::before{content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to top,rgba(20,15,9,.55),transparent 60%)}
+  .sc1{background:linear-gradient(160deg,#f4e6c6,#e2d1ab 55%,#c9b489)}
+  .sc2{background:linear-gradient(200deg,#efe6d5,#d9cdb6 60%,#b9ab8e)}
+  .sc3{background:linear-gradient(170deg,#e9dcc0,#b79e78 70%,#6c5843)}
+  .sc4{background:linear-gradient(150deg,#f1ead9,#cebfa3 60%,#8b8175)}
+  .sc5{background:linear-gradient(190deg,#f6edd4,#e6d6b4 55%,#cdb98f)}
+
+  /* ---------- PHONE RULES ---------- */
+  .rules{padding:4.5rem 0 2rem}
+  .rules-inner{background:var(--raised);border:1px solid var(--line);border-radius:18px;
+    padding:clamp(1.8rem,4vw,3rem);box-shadow:var(--shadow)}
+  .rules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:1.6rem}
+  .rule{background:var(--raised);padding:1.3rem 1.4rem;display:flex;gap:1rem;align-items:flex-start}
+  .rule .n{font-family:var(--serif);font-size:1.5rem;color:var(--wood);line-height:1;min-width:1.3em}
+  .rule .b{font-weight:600;font-size:.98rem}
+  .rule .s{color:var(--ink-soft);font-size:.88rem;margin-top:.2rem}
+  .callout{margin-top:1.6rem;font-size:.92rem;color:var(--ink-soft);padding:1rem 1.2rem;
+    border:1px dashed var(--line);border-radius:12px}
+  .callout b{color:var(--ink)}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:5rem 0 4rem;text-align:center}
+  footer .mark{font-family:var(--serif);font-size:1.6rem;letter-spacing:.02em}
+  footer .mark span{color:var(--wood)}
+  footer .sub{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin-top:.6rem}
+  footer .soli{margin-top:1.6rem;font-family:var(--serif);font-style:italic;color:var(--ink-soft)}
+
+  /* motion */
+  .rise{opacity:0;transform:translateY(14px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}.d4{animation-delay:.46s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.rise{animation:none;opacity:1;transform:none}}
+
+  /* responsive */
+  @media (max-width:820px){
+    .swatches{grid-template-columns:repeat(3,1fr)}
+    .tile-grid{grid-template-columns:repeat(2,1fr)}
+    .span3,.span2{grid-column:span 2}
+    .pillar-grid{grid-template-columns:1fr}
+    .pole-grid{grid-template-columns:1fr}
+    .cross{transform:rotate(90deg);padding:.6rem 0}
+    .scene-grid{grid-template-columns:repeat(2,1fr)}
+    .rules-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:480px){
+    .swatches{grid-template-columns:repeat(2,1fr)}
+    .filmstrip{gap:.9rem}
+  }
+</style>
+
+<div class="page">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="kicker rise d1">jihye · essence &nbsp;— &nbsp;moodboard v1</div>
+      <h1 class="tagline rise d2">Rebuild<br>your <em>center.</em></h1>
+      <p class="hero-sub rise d3">완벽한 몸이 아니라, <b>계속 살아있는 중심.</b><br>차분하고, 단단하고, 따뜻한.</p>
+      <div class="filmstrip rise d4">
+        <span><i class="dot"></i>calm × solid × warm</span>
+        <span><i class="dot"></i>35mm · natural light</span>
+        <span><i class="dot"></i>no flash · film grain</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <section class="pillars">
+    <div class="wrap">
+      <div class="sect-head">
+        <p class="eyebrow">the three notes · 세 개의 음</p>
+        <h2 class="sect">눈에 보이는 '중심' — 세 겹으로</h2>
+        <p class="sect-note">지혜님이 본능으로 고른 계정들이 전부 이 셋을 가리켰다. 미감이 곧 메시지다.</p>
+      </div>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="en">calm</div><div class="kr">차분함 · 신경계가 가라앉은</div>
+          <p>부드러운 자연광, 느린 편집, 여백. 화면에 많은 걸 담지 않는다.</p>
+          <div class="bar"></div>
+        </div>
+        <div class="pillar">
+          <div class="en">solid</div><div class="kr">단단함 · 무너지지 않는 코어</div>
+          <p>건축적인 선, 블랙 악센트, 자연 소재. 예쁘장함이 아니라 그라운디드.</p>
+          <div class="bar"></div>
+        </div>
+        <div class="pillar">
+          <div class="en">warm</div><div class="kr">따뜻함 · 사람에게 스며듦</div>
+          <p>크림·모래·햇살 톤, 필름 그레인. 죽은 완벽이 아니라 살아있는 온기.</p>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALETTE -->
+  <section class="palette">
+    <div class="wrap">
+      <div class="sect-head">
+        <p class="eyebrow">palette · 색</p>
+        <h2 class="sect">크림·모래·웜그레이 바탕 + 블랙 악센트</h2>
+        <p class="sect-note">형광·비비드는 없다. 자연에서 온 색만. 블랙은 유일한 강조 — 그래서 힘이 있다.</p>
+      </div>
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#F3EDE2"></div><div class="meta"><div class="nm">Cream</div><div class="kr">크림 · 바탕</div><div class="hex">#F3EDE2</div></div></div>
+        <div class="sw"><div class="chip" style="background:#E4DAC8"></div><div class="meta"><div class="nm">Sand</div><div class="kr">모래 · 바탕</div><div class="hex">#E4DAC8</div></div></div>
+        <div class="sw"><div class="chip" style="background:#8B8175"></div><div class="meta"><div class="nm">Warm Grey</div><div class="kr">웜그레이 · 보조</div><div class="hex">#8B8175</div></div></div>
+        <div class="sw"><div class="chip" style="background:#221E17"></div><div class="meta"><div class="nm">Ink Black</div><div class="kr">블랙 · 악센트</div><div class="hex">#221E17</div></div></div>
+        <div class="sw"><div class="chip" style="background:#6C5843"></div><div class="meta"><div class="nm">Wood</div><div class="kr">원목 · 앤티크</div><div class="hex">#6C5843</div></div></div>
+        <div class="sw"><div class="chip" style="background:linear-gradient(120deg,#F6EAC9,#D8BE8B)"></div><div class="meta"><div class="nm">Honey Light</div><div class="kr">햇살 · 빛</div><div class="hex">#E9D5AC</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERIALS -->
+  <section class="materials">
+    <div class="wrap">
+      <div class="sect-head">
+        <p class="eyebrow">materials & texture · 소재와 질감</p>
+        <h2 class="sect">원목 · 리넨 · 주트 · 테라조 · 종이 · 필름</h2>
+        <p class="sect-note">플라스틱·쨍한 광택은 없다. 손으로 만질 수 있는 자연 소재 위에, 아날로그 필름 그레인.</p>
+      </div>
+      <div class="tile-grid">
+        <div class="tile span3 row2 t-light"><span class="lab">natural light<small>부드러운 창가 빛 · 룩의 80%</small></span></div>
+        <div class="tile span3 t-wood"><span class="lab">wood<small>원목 · 헤링본 · 앤티크 기둥</small></span></div>
+        <div class="tile span3 t-terrazzo"><span class="lab" style="color:#221E17;text-shadow:none">terrazzo<small>테라조 바닥</small></span></div>
+        <div class="tile span2 t-linen"><span class="lab" style="color:#221E17;text-shadow:none">linen<small>리넨</small></span></div>
+        <div class="tile span2 t-jute"><span class="lab">jute<small>주트 러그</small></span></div>
+        <div class="tile span2 t-black"><span class="lab">ink accent<small>블랙 셔터 · 조명 · 액자</small></span></div>
+        <div class="tile span3 t-paper"><span class="lab" style="color:#221E17;text-shadow:none">paper & film grain<small>종이 · 아날로그 질감</small></span></div>
+        <div class="tile span3 t-light" style="background:linear-gradient(300deg,#F6EAC9,#E7DECF 70%)"><span class="lab" style="color:#221E17;text-shadow:none">negative space<small>여백 · 고요</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POLES -->
+  <section class="poles">
+    <div class="wrap">
+      <div class="sect-head">
+        <p class="eyebrow">the two poles · 두 극 사이 내 자리</p>
+        <h2 class="sect">동경의 극 × 닿을 수 있는 극</h2>
+        <p class="sect-note">지혜님이 사랑한 두 계정이 사실 두 개의 극이었다. jihyessence의 자리는 그 사이.</p>
+      </div>
+      <div class="pole-grid">
+        <div class="pole">
+          <div class="h">@heartofyin___ · 동경의 극</div>
+          <h3>빛 · 고요</h3>
+          <p>완벽한 배경·색감. 잔잔한 텍스트를 읽으며 그 평화에 함께 걷는 것.</p>
+          <ul><li>부드러운 자연광</li><li>타이트한 클로즈업</li><li>고요 + 정직한 텍스트</li></ul>
+        </div>
+        <div class="cross">×</div>
+        <div class="pole">
+          <div class="h">@taytrace · 닿을 수 있는 극</div>
+          <h3>정직 · 현실</h3>
+          <p>그라운디드·현실적. 완벽미학이 아니라 진짜 도움. 누구나 접근 가능한 결.</p>
+          <ul><li>완벽한 궁전이 아님</li><li>진짜 공간·진짜 몸</li><li>"나도 거기 있었다"</li></ul>
+        </div>
+      </div>
+      <div class="verdict">
+        jihyessence의 자리 = heartofyin의 <b>빛·고요</b> × taytrace의 <b>정직·현실.</b><br>
+        완벽한 궁전이 아니라, 진짜 공간에 따뜻한 빛과 고요를 입힌 것.
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENES -->
+  <section class="scenes">
+    <div class="wrap">
+      <div class="sect-head">
+        <p class="eyebrow">scene vocabulary · 무엇을 찍나</p>
+        <h2 class="sect">방을 찍지 말고 '순간'을 찍는다</h2>
+        <p class="sect-note">꽉 찬 클로즈업이 배경을 가린다. 작고 친밀한 일상의 조각들 — heartofyin처럼 화면엔 많이 담지 않는다.</p>
+      </div>
+      <div class="scene-grid">
+        <div class="scene sc1"><div class="cap"><b>물 마시는 손</b>hands · water</div></div>
+        <div class="scene sc2"><div class="cap"><b>창문 빛</b>window light</div></div>
+        <div class="scene sc3"><div class="cap"><b>걷는 발</b>walking feet</div></div>
+        <div class="scene sc4"><div class="cap"><b>움직이는 몸</b>the body, slow</div></div>
+        <div class="scene sc5"><div class="cap"><b>숨 · 목덜미</b>breath · stillness</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHONE RULES -->
+  <section class="rules">
+    <div class="wrap">
+      <div class="rules-inner">
+        <p class="eyebrow">shoot it on your phone · 오늘 바로</p>
+        <h2 class="sect">저택이 필요 없다 — 빛과 고요만 있으면</h2>
+        <p class="sect-note">heartofyin의 '완벽함'을 뜯어보면 네 가지뿐. 전부 폰으로 된다.</p>
+        <div class="rules-grid">
+          <div class="rule"><div class="n">1</div><div><div class="b">빛 제일 예쁜 창 하나</div><div class="s">거기서만 찍기. 그 '룩'의 80%가 자연광.</div></div></div>
+          <div class="rule"><div class="n">2</div><div><div class="b">방 말고 '순간'을 찍기</div><div class="s">꽉 찬 클로즈업이 배경을 가린다.</div></div></div>
+          <div class="rule"><div class="n">3</div><div><div class="b">프리셋 하나로 통일</div><div class="s">매번 같은 필름 톤 · 그레인. 피드 통일감.</div></div></div>
+          <div class="rule"><div class="n">4</div><div><div class="b">작은 코너 하나만 정돈</div><div class="s">온 집 말고. 옷은 뉴트럴 — 지혜님 자체가 세트.</div></div></div>
+        </div>
+        <div class="callout">⭐ '꿈의 스튜디오' 이미지는 <b>미래 비전보드</b>(가고 싶은 센터 · TTC). <b>오늘 찍는 콘텐츠 ≠ 그 공간.</b> 오늘은 '진짜 + 빛 + 고요'로 충분. 둘을 분리할 것.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="mark">jihye<span>·</span>essence</div>
+      <div class="sub">Rebuild your center — body · mind · soul</div>
+      <div class="soli">Soli Deo Gloria</div>
+    </div>
+  </footer>
+</div>
